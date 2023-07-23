@@ -54,3 +54,17 @@ cd three-tier
 
 <br>
 
+## Create Terraform configuration files
+Inside the directory, create the following files:
+
+- **main.tf:** The main Terraform configuration file.
+- **network.tf:** sets up the VPC and its subnets, as well as security groups and rules for the web, app, and database tiers
+- **database.tf:** creates a MySQL RDS instance, security group, and rules for the database tier
+- **compute.tf:** sets up the compute resources for the web and app tiers, including launch configurations, auto-scaling groups, application load balancers, target groups, and listeners
+- **variables.tf:** Declare variables here.
+- **outputs.tf:** Define outputs to display after deployment.
+- **terraform.tfvars:** Set values for variables in this file. Make sure to keep sensitive information, such as AWS access keys, out of version control.
+
+<br>
+
+<br>
