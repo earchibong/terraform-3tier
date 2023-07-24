@@ -132,4 +132,83 @@ The `locals` block defines local values that can be used throughout the Terrafor
 
 <br>
 
+## Set Up Network Configuration
+in the `network.tf` file, we will set up the VPC, subnets, and security groups for our infrastructure.
+
+### set Up VPC configuration
+```
+
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name = "main"
+  cidr = var.vpc_cidr
+
+  azs              = ["${var.aws_region}a", "${var.aws_region}b"]
+  public_subnets   = var.public_subnets
+  private_subnets  = var.private_subnets
+  database_subnets = var.database_subnets
+
+  enable_nat_gateway = true
+  enable_vpn_gateway = false
+
+  public_subnet_names   = ["web-subnet-1", "web-subnet-2"]
+  private_subnet_names  = ["app-subnet-1", "app-subnet-2"]
+  database_subnet_names = ["db-subnet-1", "db-subnet-2"]
+
+  tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+}
+
+```
+
+<br>
+
+### Configure Security Groups for each infrastructure tier
+
+```
+
+resource "aws_security_group" "web" {
+  name        = "web"
+  description = "Allow inbound traffic for web tier"
+  vpc_id      = module.vpc.vpc_id
+}
+
+
+resource "aws_security_group_rule" "web" {
+  security_group_id = aws_security_group.web.id
+
+  type        = "ingress"
+  from_port   = 80
+  to_port     = 80
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
+
+resource "aws_security_group_rule" "web_ssh" {
+  security_group_id = aws_security_group.web.id
+
+  type        = "ingress"
+  from_port   = 22
+  to_port     = 22
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"] # Replace with your desired CIDR blocks for SSH access
+}
+
+
+```
+
+<br>
+
+<br>
+
+<img width="965" alt="ntwork_1" src="https://github.com/earchibong/terraform-3tier/assets/92983658/a632fa3f-0b94-450c-baf3-219ab2c3214b">
+
+<br>
+
+<br>
+
 
