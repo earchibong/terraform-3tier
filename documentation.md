@@ -17,13 +17,11 @@ The database tier is the bottom layer responsible for storing and managing data 
 
 ## Advantages of Three-Tier Architecture:
 
-**Scalability:** The architecture's modularity allows each tier to be scaled independently, making it easier to handle increasing workloads.
-**Maintainability:** The separation of concerns makes it easier to update or modify one tier without affecting the others, reducing the risk of introducing bugs or issues.
-**Security:** By restricting direct access between tiers, it enhances the overall security of the system.
-**Flexibility:** Each tier can be developed using different technologies and languages, providing flexibility for the development team.
-**Reusability:** The separation of concerns allows for better code re-use across different projects.
-
-<br>
+- **Scalability:** The architecture's modularity allows each tier to be scaled independently, making it easier to handle increasing workloads.
+- **Maintainability:** The separation of concerns makes it easier to update or modify one tier without affecting the others, reducing the risk of introducing bugs or issues.
+- **Security:** By restricting direct access between tiers, it enhances the overall security of the system.
+- **Flexibility:** Each tier can be developed using different technologies and languages, providing flexibility for the development team.
+- **Reusability:** The separation of concerns allows for better code re-use across different projects.
 
 <br>
 
@@ -57,7 +55,7 @@ cd three-tier
 ## Create Terraform configuration files
 Inside the directory, create the following files:
 
-- **main.tf:** The main Terraform configuration file.
+- **versions.tf:** terraform providers file.
 - **network.tf:** sets up the VPC and its subnets, as well as security groups and rules for the web, app, and database tiers
 - **database.tf:** creates a MySQL RDS instance, security group, and rules for the database tier
 - **compute.tf:** sets up the compute resources for the web and app tiers, including launch configurations, auto-scaling groups, application load balancers, target groups, and listeners
@@ -68,3 +66,70 @@ Inside the directory, create the following files:
 <br>
 
 <br>
+
+## Write Terraform Configuration
+
+In the **versions.tf** add the 
+### Define Terraform configuration block
+```
+
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = ">= 4.8.0"
+    }
+  }
+}
+
+```
+
+<br>
+
+This block defines the terraform settings for the configuration. In this case, we're using the AWS provider from HashiCorp, and we're specifying that we need at least version 4.8.0 or newer. By specifying the minimum required version, we ensure that our configuration is compatible with the features and resources we need.
+
+<br>
+
+### Define Providers Block
+```
+
+provider "aws" {
+  region  = var.aws_region
+  profile = var.aws_profile
+}
+
+```
+
+<br>
+
+Providers allow Terraform to interact with cloud providers, SaaS providers, and other APIs. In this case, we set the `AWS region` and `profile` using variables defined elsewhere in our configuration (var.aws_region and var.aws_profile).
+
+<br>
+
+### Define Locals Block
+```
+
+locals {
+  common_tags = {
+    Terraform   = "true"
+    Environment = var.environment
+  }
+}
+
+```
+
+<br>
+
+The `locals` block defines local values that can be used throughout the Terraform configuration.
+
+<br>
+
+<br>
+
+<img width="1146" alt="versions" src="https://github.com/earchibong/terraform-3tier/assets/92983658/2e7b3355-73d0-4158-ac02-89c898e5a6e3">
+
+<br>
+
+<br>
+
+
