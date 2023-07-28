@@ -166,7 +166,10 @@ module "vpc" {
 
 <br>
 
-### Configure Security Groups for each infrastructure tier
+### Configure Security Groups for web tier
+Here, we'll define the security group for the web tier allowing inbound traffic. This security group rule will allow inbound traffic on port 80 (HTTP) and allow SSH access to the web tier.
+
+<br>
 
 ```
 
