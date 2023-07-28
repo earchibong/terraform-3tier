@@ -214,4 +214,5 @@ resource "aws_security_group_rule" "web_ssh" {
 
 <br>
 
-
+## Create Compute Resources and Autoscaling
+The `compute.tf file`, sets up the compute resources for our application
