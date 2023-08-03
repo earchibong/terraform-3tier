@@ -216,3 +216,61 @@ resource "aws_security_group_rule" "web_ssh" {
 
 ## Create Compute Resources and Autoscaling
 The `compute.tf file`, sets up the compute resources for our application
+
+### Web Tier
+
+```
+
+resource "aws_launch_template" "web" {
+  name_prefix   = "web-lt-"
+  image_id      = "ami-007855ac798b5175e" # AMI ID for Ubuntu 22.04; replace it with the appropriate AMI ID for your use case
+  instance_type = var.web_instance_type   #change instance size to your specifications in .tfvars file, such as M5 General
+
+  vpc_security_group_ids = [aws_security_group.web.id]
+
+  user_data = base64encode(templatefile("${path.module}/userdata_web.tpl", {}))
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_autoscaling_group" "web" {
+  name_prefix          = "web-asg-"
+  launch_configuration = aws_launch_template.web.id
+  min_size             = 1
+  max_size             = 4
+  desired_capacity     = 2
+  vpc_zone_identifier  = module.vpc.public_subnets
+  target_group_arns    = [aws_lb_target_group.web.arn]
+
+  tag {
+    key                 = "Name"
+    value               = "web"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Terraform"
+    value               = "true"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Environment"
+    value               = "dev"
+    propagate_at_launch = true
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+```
+
+<br>
+
+<br>
+
+
