@@ -219,6 +219,9 @@ The `compute.tf file`, sets up the compute resources for our application
 
 ### Web Tier
 
+we'll create an `aws_launch_template` and an `aws_autoscaling_group`. The launch template specifies the instance configuration, such as the AMI ID, instance type, and security group. The autoscaling group uses this template to launch instances and manages the scaling policies.
+
+
 ```
 
 resource "aws_launch_template" "web" {
